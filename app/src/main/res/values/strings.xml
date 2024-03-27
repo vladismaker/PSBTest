@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">PSBTest</string>
+    <string name="title_home">Главная</string>
+    <string name="title_two">Конвертер</string>
+    <string name="title_three">Калькулятор</string>
+    <string name="error">Ошибка ввода</string>
+    <string name="check_internet">Проверьте интернет соединение!</string>
+    <string name="update">Обновить</string>
+    <string name="value">Значение</string>
+    <string name="name">Название</string>
+    <string name="updated">Обновлено</string>
+</resources>
