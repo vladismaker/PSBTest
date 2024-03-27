@@ -49,7 +49,7 @@ class HomePresenter(private val view:HomeView, private val stringsInteractor: St
 
                         }else{
                             val fullUrl = "https://www.cbr-xml-daily.ru/daily_json.js"
-                            val data  = async {model.startRequest(fullUrl)}.await()
+                            val data  = async {model.startRequestRetrofit(fullUrl)}.await()
                             if (data!=null && data!="error"){
                                 dataFromJson(data.toString())
                                 withContext(Dispatchers.Main){

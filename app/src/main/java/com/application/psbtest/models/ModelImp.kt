@@ -4,38 +4,39 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.application.psbtest.AppContext
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
-import java.net.URL
+import com.application.psbtest.retrofit.ApiService
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class ModelImp:Model {
-
-    override suspend fun startRequest(url: String): String?  {
+    override suspend fun startRequestRetrofit(url: String): String? {
         return suspendCoroutine { continuation ->
-
-            val client = OkHttpClient()
-
-            val urlMy = URL(url)
-            val request = Request.Builder()
-                .url(urlMy)
+            val retrofit = Retrofit.Builder()
+                .baseUrl("https://www.cbr-xml-daily.ru/")
                 .build()
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    continuation.resume("error")
+
+            val apiService = retrofit.create(ApiService::class.java)
+
+            val call = apiService.getRequest()
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        continuation.resume(response.body()?.string())
+                    } else {
+                        continuation.resume("error")
+                    }
                 }
 
-                override fun onResponse(call: Call, response: Response) {
-                    continuation.resume(response.body?.string())
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    continuation.resume("error")
                 }
             })
         }
-
     }
 
     override suspend fun checkInternet(): Boolean {
